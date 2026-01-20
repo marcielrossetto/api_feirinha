@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * DTO (Data Transfer Object) para Item.
+ * DTO (Data Transfer Object) para Item
  * 
- * Usado para:
- * 1. Receber dados do cliente (requests)
- * 2. Validar os dados de entrada
- * 3. Enviar dados para o cliente (responses)
+ * Responsabilidades:
+ * - Receber dados do cliente (requisições HTTP)
+ * - Validar os dados de entrada com anotações Jakarta Validation
+ * - Enviar dados para o cliente (respostas HTTP)
  * 
- * O DTO NÃO inclui o ID, pois é gerado pelo banco.
+ * Nota: O ID não é incluído aqui pois é gerado automaticamente pelo banco
  */
 @Getter
 @Setter
@@ -23,27 +23,37 @@ import lombok.Setter;
 public class ItemDTO {
 
     /**
-     * Nome do item.
+     * Nome do item da lista de compras
      * 
-     * @NotBlank: não pode ser null, vazio ou só espaços em branco
-     * @NotNull: redundante com @NotBlank, mas deixa explícito
-     * @Size(min = 1, max = 100): entre 1 e 100 caracteres
+     * Validações:
+     * - @NotBlank: não pode ser null, vazio ou apenas espaços em branco
+     * - @NotNull: redundante com @NotBlank, mas deixa explícito a obrigatoriedade
+     * - @Size(min = 3, max = 100): entre 3 e 100 caracteres
      */
-    @NotBlank(message = "Nome não pode ser vazio")
-    @NotNull(message = "Nome é obrigatório")
-    @Size(min = 1, max = 100, message = "Nome deve ter entre 1 e 100 caracteres")
-    private String name;
+    @NotBlank(message = "O nome do item não pode estar em branco")
+    @NotNull(message = "O nome do item é obrigatório")
+    @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
+    private String nome;
 
     /**
-     * Quantidade do item.
+     * Descrição opcional do item
      * 
-     * @NotNull: não pode ser null
-     * @Min(1): deve ser no mínimo 1
-     * @Max(999999): limite máximo de quantidade
+     * Validações:
+     * - @Size(max = 255): máximo 255 caracteres
      */
-    @NotNull(message = "Quantidade é obrigatória")
-    @Min(value = 1, message = "Quantidade deve ser maior que 0")
-    @Max(value = 999999, message = "Quantidade não pode ser maior que 999999")
-    private Integer quantity;
+    @Size(max = 255, message = "A descrição não pode exceder 255 caracteres")
+    private String descricao;
 
+    /**
+     * Quantidade do item a ser comprado
+     * 
+     * Validações:
+     * - @NotNull: não pode ser null (obrigatório)
+     * - @Min(1): deve ser no mínimo 1
+     * - @Max(10000): não pode exceder 10.000
+     */
+    @NotNull(message = "A quantidade é obrigatória")
+    @Min(value = 1, message = "A quantidade deve ser no mínimo 1")
+    @Max(value = 10000, message = "A quantidade não pode exceder 10.000")
+    private Integer quantidade;
 }
